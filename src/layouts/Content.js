@@ -1,10 +1,10 @@
 import * as React from "react";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import StockList from "./StockList";
 import LineChart from "../Charts/LineChart";
 import * as mockData from "../data/data";
 import {AlphaVantage} from "../api";
+import RssFeeds from "./RssFeeds";
 
 const style = {
     Paper: {
@@ -71,7 +71,7 @@ class Content extends React.Component {
                     {this.renderCharts()}
                 </Grid>
                 <Grid item xs={12} lg={3}>
-                    <Paper style={style.Paper}>Right Column</Paper>
+                    <RssFeeds/>
                 </Grid>
             </Grid>
 
