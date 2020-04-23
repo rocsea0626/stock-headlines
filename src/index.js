@@ -3,17 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { 
+    Route, 
+    Link, 
+    BrowserRouter as Router, 
+    Switch  
+} from 'react-router-dom';
+import Notfound from './pages/NotFound'
 
 
 
 const routing = (
     <Router>
-        <div>
-            <Route path="/" component={App} />
+        <Switch>
+            <Route exact path="/" component={App} />
             {/* <Route path="/users" component={Users} /> */}
             {/* <Route path="/contact" component={Contact} /> */}
-        </div>
+            <Route component={Notfound} />
+        </Switch>
     </Router>
 )
 
