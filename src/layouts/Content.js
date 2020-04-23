@@ -1,10 +1,13 @@
 import * as React from "react";
-import Grid from "@material-ui/core/Grid";
 import StockList from "./StockList";
 import LineChart from "../Charts/LineChart";
 import * as mockData from "../data/data";
-import {AlphaVantage} from "../api";
+import { AlphaVantage } from "../api";
 import RssFeeds from "./RssFeeds";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 
 const style = {
     Paper: {
@@ -46,7 +49,7 @@ class Content extends React.Component {
     }
 
     getData = () => {
-        this.setState({quotes: AlphaVantage.quotesDailyParser(mockData.data)})
+        this.setState({ quotes: AlphaVantage.quotesDailyParser(mockData.data) })
     }
 
     renderCharts = () => {
@@ -54,9 +57,9 @@ class Content extends React.Component {
             console.log(quote)
             return (
                 <LineChart key={"line-chart-" + quote.symbol}
-                           title={quote.symbol}
-                           labels={quote.prices.map(p => p.date)}
-                           data={quote.prices.map(p => p.price.toString('.2d'))} color={"red"}/>
+                    title={quote.symbol}
+                    labels={quote.prices.map(p => p.date)}
+                    data={quote.prices.map(p => p.price.toString('.2d'))} color={"red"} />
             )
         })
     }
@@ -64,16 +67,21 @@ class Content extends React.Component {
     render() {
         console.log(this.state.quotes)
         return (
-            <Grid container spacing={1} style={style.container}>
-                <StockList symbols={symbols}/>
-                <Grid item xs={12} lg={6}>
-                    {/*<Paper style={style.Paper}>Middle Column</Paper>*/}
-                    {this.renderCharts()}
-                </Grid>
-                <Grid item xs={12} lg={3}>
-                    <RssFeeds/>
-                </Grid>
-            </Grid>
+            <Container>
+                <Row>
+                    <Col>1 of 1</Col>
+                </Row>
+            </Container>
+            // <Grid container spacing={1} style={style.container}>
+            //     <StockList symbols={symbols}/>
+            //     <Grid item xs={12} lg={6}>
+            //         {/*<Paper style={style.Paper}>Middle Column</Paper>*/}
+            //         {this.renderCharts()}
+            //     </Grid>
+            //     <Grid item xs={12} lg={3}>
+            //         <RssFeeds/>
+            //     </Grid>
+            // </Grid>
 
         );
     }

@@ -1,13 +1,9 @@
 import Header from './Header';
 import Footer from './Footer';
-import Content from './Content';
-import StockList from './StockList';
-import RssFeeds from './RssFeeds';
+import StocksList from './StocksList/StocksList';
 
 export {
     Header,
     Footer,
-    Content,
-    StockList,
-    RssFeeds
+    StocksList,
 }
