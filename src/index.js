@@ -1,26 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { 
-    Route, 
-    Link, 
-    BrowserRouter as Router, 
-    Switch  
+import {
+    Route,
+    Link,
+    BrowserRouter as Router,
+    Switch
 } from 'react-router-dom';
-import Notfound from './pages/NotFound'
 
+import {
+    Header,
+    Footer,
+} from './layouts';
 
+import {
+    App,
+    Chart,
+    NotFound
+} from './pages';
 
 const routing = (
     <Router>
+        <Header />
         <Switch>
             <Route exact path="/" component={App} />
-            {/* <Route path="/users" component={Users} /> */}
+            <Route path="/charts/:symbol" component={Chart} />
             {/* <Route path="/contact" component={Contact} /> */}
-            <Route component={Notfound} />
+            <Route component={NotFound} />
         </Switch>
+        <Footer />
     </Router>
 )
 

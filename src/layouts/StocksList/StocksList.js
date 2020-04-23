@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Yahoo } from "../../api";
 import Table from 'react-bootstrap/Table';
-import './StocksList.css'
+import './StocksList.css';
+import { Link } from 'react-router-dom';
 
 
 class StocksList extends React.Component {
@@ -68,9 +69,17 @@ class StocksList extends React.Component {
                     onClick={() => this.handleClick(q)}
                 >
                     <td>{idx + 1}</td>
-                    <td>{q.symbol}</td>
+                    <td>
+                        <Link to={"/charts/" + q.symbol}>
+                            {q.symbol}
+                        </Link>
+                    </td>
                     <td>{q.shortName}</td>
-                    <td>{q.fullExchangeName}</td>
+                    <td>
+                        <Link to={"/charts/" + q.fullExchangeName}>
+                            {q.fullExchangeName}
+                        </Link>
+                    </td>
                     <td className={`priceChange ${this.isIncreasing(q.regularMarketChange) ? "increase" : "decrease"}`
                     }>
                         {q.currency + ' ' + this.formatPrice(q.regularMarketPrice)}
@@ -80,6 +89,7 @@ class StocksList extends React.Component {
                         {this.formatPercentage(q.regularMarketChangePercent)}
                     </td>
                     <td>{q.regularMarketVolume}</td>
+
                 </tr>
             )
         })
