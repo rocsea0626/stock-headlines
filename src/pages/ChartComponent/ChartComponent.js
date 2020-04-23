@@ -3,6 +3,7 @@ import './ChartComponent.css';
 import { Yahoo } from '../../api';
 import { Line } from 'react-chartjs-2';
 import Container from 'react-bootstrap/Container';
+import { formatTimestamp, formatPrice } from '../../utils'
 
 class ChartComponent extends React.Component {
 
@@ -16,12 +17,17 @@ class ChartComponent extends React.Component {
 
     componentDidMount() {
         const { symbol } = this.props.match.params
+        
         Yahoo.fetchChart(symbol)
             .then((res) => {
-
+                const {result} = res.data.chart
                 this.setState({
-                    timestamps: res.data.chart.result[0].timestamp,
-                    quotes: res.data.chart.result[0].indicators.quote[0].close,
+                    timestamps: result[0].timestamp.map((ts)=>{
+                        return formatTimestamp(ts)
+                    }),
+                    quotes: result[0].indicators.quote[0].close.map((p)=>{
+                        return formatPrice(p)
+                    }),
                 })
 
             })
@@ -32,7 +38,7 @@ class ChartComponent extends React.Component {
 
     render() {
         const data = {
-            labels: this.formatDates(this.state.timestamps),
+            labels: this.state.timestamps,
             datasets: [{
                 label: this.props.match.params.symbol,
                 data: this.state.quotes,
@@ -53,11 +59,6 @@ class ChartComponent extends React.Component {
         )
     }
 
-    formatDates = (dates) => {
-        return dates.map((d) => {
-            return new Date(d * 1000).toDateString()
-        })
-    }
 }
 
 export default ChartComponent;

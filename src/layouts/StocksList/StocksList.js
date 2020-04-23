@@ -3,6 +3,7 @@ import { Yahoo } from "../../api";
 import Table from 'react-bootstrap/Table';
 import './StocksList.css';
 import { Link } from 'react-router-dom';
+import {formatPercentage, formatPrice} from '../../utils';
 
 
 class StocksList extends React.Component {
@@ -47,27 +48,11 @@ class StocksList extends React.Component {
         return false
     }
 
-    formatPercentage = (percentageStr) => {
-        return Number.parseFloat(percentageStr).toFixed(2) + '%'
-    }
-
-    formatPrice = (percentageStr) => {
-        return Number.parseFloat(percentageStr).toFixed(2)
-    }
-
-    handleClick = (quote) => {
-        console.log(quote)
-
-
-    }
-
     renderStocks = () => {
         const rows = this.state.quotes.map((q, idx) => {
             // console.log(q)
             return (
-                <tr key={idx}
-                    onClick={() => this.handleClick(q)}
-                >
+                <tr key={idx}>
                     <td>{idx + 1}</td>
                     <td>
                         <Link to={"/charts/" + q.symbol}>
@@ -82,11 +67,11 @@ class StocksList extends React.Component {
                     </td>
                     <td className={`priceChange ${this.isIncreasing(q.regularMarketChange) ? "increase" : "decrease"}`
                     }>
-                        {q.currency + ' ' + this.formatPrice(q.regularMarketPrice)}
+                        {q.currency + ' ' + formatPrice(q.regularMarketPrice)}
                     </td>
                     <td className={`priceChange ${this.isIncreasing(q.regularMarketChangePercent) ? "increase" : "decrease"}`
                     }>
-                        {this.formatPercentage(q.regularMarketChangePercent)}
+                        {formatPercentage(q.regularMarketChangePercent)}
                     </td>
                     <td>{q.regularMarketVolume}</td>
 
