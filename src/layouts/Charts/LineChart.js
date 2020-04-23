@@ -8,6 +8,7 @@ class LineChart extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props)
         this.myChart = new Chart(this.canvasRef.current, {
             type: 'line',
             options: {
@@ -46,13 +47,21 @@ class LineChart extends React.Component {
         });
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        return true
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         console.log("componentDidUpdate()")
+
     }
 
     render() {
+        console.log("render()")
+        console.log(this.props)
         return <canvas ref={this.canvasRef} />;
     }
+
 }
 
 export default LineChart;

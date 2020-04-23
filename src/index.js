@@ -16,7 +16,7 @@ import {
 
 import {
     App,
-    Chart,
+    ChartComponent,
     NotFound
 } from './pages';
 
@@ -25,7 +25,7 @@ const routing = (
         <Header />
         <Switch>
             <Route exact path="/" component={App} />
-            <Route path="/charts/:symbol" component={Chart} />
+            <Route path="/charts/:symbol" component={ChartComponent} />
             {/* <Route path="/contact" component={Contact} /> */}
             <Route component={NotFound} />
         </Switch>

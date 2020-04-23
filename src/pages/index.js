@@ -1,9 +1,9 @@
 import App from './App/App';
-import Chart from './Chart/Chart';
+import ChartComponent from './ChartComponent/ChartComponent';
 import NotFound from './NotFound/NotFound';
 
 export {
     App,
-    Chart,
+    ChartComponent,
     NotFound,
 }
