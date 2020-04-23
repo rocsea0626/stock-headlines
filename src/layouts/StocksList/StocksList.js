@@ -40,32 +40,44 @@ class StocksList extends React.Component {
     }
 
     isIncreasing = (change) => {
-        if(change)
+        if (change)
             return change > 0
 
         return false
     }
 
     formatPercentage = (percentageStr) => {
+        return Number.parseFloat(percentageStr).toFixed(2) + '%'
+    }
+
+    formatPrice = (percentageStr) => {
         return Number.parseFloat(percentageStr).toFixed(2)
+    }
+
+    handleClick = (quote) => {
+        console.log(quote)
+
+
     }
 
     renderStocks = () => {
         const rows = this.state.quotes.map((q, idx) => {
             // console.log(q)
             return (
-                <tr key={idx}>
+                <tr key={idx}
+                    onClick={() => this.handleClick(q)}
+                >
                     <td>{idx + 1}</td>
                     <td>{q.symbol}</td>
                     <td>{q.shortName}</td>
                     <td>{q.fullExchangeName}</td>
                     <td className={`priceChange ${this.isIncreasing(q.regularMarketChange) ? "increase" : "decrease"}`
                     }>
-                        {q.currency + ' ' + q.regularMarketPrice}
+                        {q.currency + ' ' + this.formatPrice(q.regularMarketPrice)}
                     </td>
                     <td className={`priceChange ${this.isIncreasing(q.regularMarketChangePercent) ? "increase" : "decrease"}`
                     }>
-                        {this.formatPercentage(q.regularMarketChangePercent)+'%'}
+                        {this.formatPercentage(q.regularMarketChangePercent)}
                     </td>
                     <td>{q.regularMarketVolume}</td>
                 </tr>
@@ -78,7 +90,7 @@ class StocksList extends React.Component {
     render() {
         // console.log(this.state.quotes)
         return (
-            <Table>
+            <Table hover="true">
                 <thead>
                     <tr>
                         <th>#</th>

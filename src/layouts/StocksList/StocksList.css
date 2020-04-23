@@ -1,3 +1,9 @@
+tr {
+  cursor: pointer;
+}
+
+
+
 td.priceChange{
   font-weight: bold;
   font-style: oblique;
