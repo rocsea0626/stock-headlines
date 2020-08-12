@@ -1,56 +1,24 @@
 import * as React from "react";
-import { Yahoo } from "../../api";
 import Table from 'react-bootstrap/Table';
 import './StocksList.css';
 import { Link } from 'react-router-dom';
-import {formatPercentage, formatPrice} from '../../utils';
-
+import { formatPercentage, formatPrice } from '../../utils';
+import { connect } from "react-redux"
+import { fetchQuotes } from '../../actions'
+import Spinner from 'react-bootstrap/Spinner'
 
 class StocksList extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            quotes: []
-        }
-    }
-
     componentDidMount() {
-        console.log("componentDidMount()")
-        const symbols = [
-            'AMZN',
-            'AMBA',
-            'NVDA',
-            'TSM'
-        ]
-        this.getData(symbols)
-    }
-
-    getData = (symbols) => {
-
-        Yahoo.fetchQuotes(symbols)
-            .then((res) => {
-                console.log(res.data.quoteResponse.result)
-                this.setState({
-                    quotes: res.data.quoteResponse.result
-                })
-            })
-            .catch(err => {
-                console.log(err)
-            })
-
+        this.props.fetchQuotes()
     }
 
     isIncreasing = (change) => {
-        if (change)
-            return change > 0
-
-        return false
+        return change > 0
     }
 
     renderStocks = () => {
-        const rows = this.state.quotes.map((q, idx) => {
-            // console.log(q)
+        const rows = this.props.quotes.map((q, idx) => {
             return (
                 <tr key={idx}>
                     <td>{idx + 1}</td>
@@ -78,12 +46,14 @@ class StocksList extends React.Component {
                 </tr>
             )
         })
-
         return rows
     }
 
     render() {
-        // console.log(this.state.quotes)
+        console.log(this.props)
+        if (this.props.loading) {
+            return <Spinner animation="border" variant="primary" />
+        }
         return (
             <Table hover="true">
                 <thead>
@@ -105,6 +75,16 @@ class StocksList extends React.Component {
     }
 }
 
-export default StocksList
+const mapStateToProps = state => {
+    return {
+        quotes: state.quotes.quotes,
+        loading: state.quotes.loading
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    { fetchQuotes }
+)(StocksList)
 
 

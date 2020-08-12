@@ -1,34 +1,29 @@
 import React from 'react';
-import Modal from 'react-bootstrap/Modal';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
 
 class RssFeeds extends React.Component {
 
     render() {
 
-        return (
-            <Modal
-                show={this.props.show}
-                onHide={this.handleClose} 
-                animation={false}
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={this.handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        )
-    }
+        if(this.props.show){
+            return (
+                <Jumbotron>
+                    <h1>Hello, world!</h1>
+                    <p>
+                        This is a simple hero unit, a simple jumbotron-style component for calling
+                        extra attention to featured content or information.
+                    </p>
+                    <p>
+                        <Button variant="primary">Learn more</Button>
+                    </p>
+                </Jumbotron>
+            )
+        }
 
-    handleClose = () => {
-        this.props.handleClose()
+        return ('')
+        
     }
-
 }
 
 export default RssFeeds

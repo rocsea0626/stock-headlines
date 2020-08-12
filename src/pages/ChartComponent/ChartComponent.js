@@ -1,51 +1,32 @@
-import React from 'react';
+import React from 'react'
+import { connect } from "react-redux"
 import './ChartComponent.css';
 import { Yahoo } from '../../api';
 import { Line } from 'react-chartjs-2';
-import Container from 'react-bootstrap/Container';
+// import Container from 'react-bootstrap/Container'
+import { Container, Spinner } from 'react-bootstrap'
 import { formatTimestamp, formatPrice } from '../../utils'
-import {
-    RssFeeds
-} from '../../layouts';
+import { RssFeeds } from '../../layouts'
+import { selectSymbol, fetchChart } from '../../actions'
 
 class ChartComponent extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            showRssFeeds: false,
-            timestamps: [],
-            quotes: []
-        }
-    }
-
     componentDidMount() {
         const { symbol } = this.props.match.params
-
-        Yahoo.fetchChart(symbol)
-            .then((res) => {
-                const { result } = res.data.chart
-                this.setState({
-                    timestamps: result[0].timestamp.map((ts) => {
-                        return formatTimestamp(ts)
-                    }),
-                    quotes: result[0].indicators.quote[0].close.map((p) => {
-                        return formatPrice(p)
-                    }),
-                })
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        this.props.fetchChart(symbol)
     }
 
-    render() {
+    renderChart = () => {
+        const { symbol } = this.props.match.params
         const data = {
-            labels: this.state.timestamps,
+            labels: this.props.timestamps.map((ts) => {
+                return formatTimestamp(ts)
+            }),
             datasets: [{
-                label: this.props.match.params.symbol,
-                data: this.state.quotes,
+                label: symbol,
+                data: this.props.quotes.map((p) => {
+                    return formatPrice(p)
+                }),
                 fill: 'none',
                 backgroundColor: "red",
                 pointRadius: 2,
@@ -57,38 +38,51 @@ class ChartComponent extends React.Component {
 
         return (
             <Container className="chartContainer">
-                <h1>Chart: {this.props.match.params.symbol}</h1>
-                <RssFeeds
-                    show={this.state.showRssFeeds}
-                    handleClose={this.hideRssFeeds}
-                />
+                <h1>Chart: {symbol}</h1>
                 <Line
                     data={data}
                     onElementsClick={(elems) => { this.onDateClicked(elems) }}
                 />
+                <RssFeeds
+                    show={!!this.props.selectedTimeStamp}
+                    symbol={symbol}
+                    timestamp={this.props.selectedTimeStamp}
+                />
             </Container>
         )
+    }
+
+    render() {
+        if (this.props.loading) {
+            return (
+                <Spinner animation="border" variant="primary" />
+            )
+        }
+
+        return this.renderChart()
     }
 
     onDateClicked = (elems) => {
 
         if (elems[0]) {
             const idx = elems[0]._index
-            const ts = this.state.timestamps[idx]
-            const date = Date.parse(new Date(ts).toDateString())
-
-            this.setState({
-                showRssFeeds: true
-            })
+            const ts = this.props.timestamps[idx]
+            const { symbol } = this.props.match.params
+            this.props.selectSymbol(symbol, ts)
         }
     }
-
-    hideRssFeeds = () => {
-        this.setState({
-            showRssFeeds: false
-        })
-    }
-
 }
 
-export default ChartComponent;
+const mapStateToProps = state => {
+    return {
+        selectedTimeStamp: state.chart.selectedTimeStamp,
+        timestamps: state.chart.timestamps,
+        quotes: state.chart.quotes,
+        loading: state.chart.loading,
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    { selectSymbol, fetchChart }
+)(ChartComponent)
