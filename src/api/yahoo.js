@@ -11,7 +11,7 @@ export function fetchQuotes(symbols) {
             params: {
                 "region": API.yahoo.region,
                 "lang": API.yahoo.lang,
-                "symbols": symbols.reduce((acc, s)=>{
+                "symbols": symbols.reduce((acc, s) => {
                     return acc + s + '%2C'
                 }, '')
             },
@@ -21,7 +21,7 @@ export function fetchQuotes(symbols) {
 }
 
 
-export function fetchChart(symbol) {
+export function fetchChart(symbol, interval = API.yahoo.interval, range = API.yahoo.range) {
 
     return axios.get(
         "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts",
@@ -30,8 +30,8 @@ export function fetchChart(symbol) {
                 "region": API.yahoo.region,
                 "lang": API.yahoo.lang,
                 "symbol": symbol,
-                "interval": API.yahoo.interval,
-                "range": API.yahoo.range
+                "interval": interval,
+                "range": range
             },
             headers: API.yahoo.headers
         }

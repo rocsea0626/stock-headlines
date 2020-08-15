@@ -10,4 +10,8 @@ export const FETCH_CHART_START = "fetch_chart_start";
 export const FETCH_CHART_COMPLETED = "fetch_chart_completed";
 export const FETCH_CHART_ERROR = "fetch_chart_error";
 
+export const FETCH_RSSFEEDS_START = "fetch_rssfeeds_start";
+export const FETCH_RSSFEEDS_COMPLETED = "fetch_rssfeeds_completed";
+export const FETCH_RSSFEEDS_ERROR = "fetch_rssfeeds_error";
+
 export const SELECT_SYMBOL = "select_symbol";

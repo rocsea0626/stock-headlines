@@ -13,5 +13,8 @@ export const API = {
             intervals: ["5m", "15m", "1d", "1wk", "1mo"],
             range: ["1d", "5d", "3mo", "6mo", "1y", "5y", "max"]
         }
+    },
+    aws: {
+        baseUrl: "https://17i4pfrcb8.execute-api.us-east-1.amazonaws.com/dev/",
     }
 }

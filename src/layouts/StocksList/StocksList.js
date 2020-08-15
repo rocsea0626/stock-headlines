@@ -23,13 +23,13 @@ class StocksList extends React.Component {
                 <tr key={idx}>
                     <td>{idx + 1}</td>
                     <td>
-                        <Link to={"/charts/" + q.symbol}>
+                        <Link to={"/chart/" + q.symbol}>
                             {q.symbol}
                         </Link>
                     </td>
                     <td>{q.shortName}</td>
                     <td>
-                        <Link to={"/charts/" + q.fullExchangeName}>
+                        <Link to={"/chart/" + q.fullExchangeName}>
                             {q.fullExchangeName}
                         </Link>
                     </td>
@@ -50,7 +50,6 @@ class StocksList extends React.Component {
     }
 
     render() {
-        console.log(this.props)
         if (this.props.loading) {
             return <Spinner animation="border" variant="primary" />
         }

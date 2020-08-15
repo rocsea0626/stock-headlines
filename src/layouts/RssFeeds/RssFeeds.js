@@ -1,29 +1,51 @@
-import React from 'react';
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Button from 'react-bootstrap/Button';
+import React from 'react'
+import { connect } from "react-redux"
+import { Jumbotron, Spinner } from 'react-bootstrap'
+import { fetchRssFeeds } from '../../actions'
 
 class RssFeeds extends React.Component {
 
-    render() {
+    componentDidMount() {
+        console.log('componentDidMount()')
+        const { symbol, timestamp } = this.props
+        this.props.fetchRssFeeds(symbol, timestamp)
+    }
 
-        if(this.props.show){
+    render() {
+        console.log('render()')
+        const { symbol, timestamp } = this.props
+
+        if (this.props.loading) {
+            return (
+                <Spinner animation="border" variant="primary" />
+            )
+        }
+        if (!!this.props.error) {
             return (
                 <Jumbotron>
-                    <h1>Hello, world!</h1>
-                    <p>
-                        This is a simple hero unit, a simple jumbotron-style component for calling
-                        extra attention to featured content or information.
-                    </p>
-                    <p>
-                        <Button variant="primary">Learn more</Button>
-                    </p>
+                    <h1>Error</h1>
                 </Jumbotron>
             )
         }
-
-        return ('')
-        
+        return (
+            <Jumbotron>
+                <h1>{symbol}</h1>
+                <p>{timestamp}</p>
+            </Jumbotron>
+        )
     }
 }
 
-export default RssFeeds
+const mapStateToProps = state => {
+    return {
+        timestamp: state.chart.selectedTimeStamp,
+        feeds: state.rssFeeds.feeds,
+        loading: state.rssFeeds.loading,
+        error: state.rssFeeds.error,
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    { fetchRssFeeds }
+)(RssFeeds)
