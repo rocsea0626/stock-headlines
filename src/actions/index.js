@@ -1,5 +1,6 @@
 import * as actionTypes from '../constants/actionTypes'
 import { AWS, Yahoo } from '../api'
+import { connect } from 'react-redux'
 
 const createAction = (type, payload) => {
     return {
@@ -34,6 +35,7 @@ export const fetchQuotes = () => {
             const res = await Yahoo.fetchQuotes(symbols)
             dispatch(createAction(actionTypes.FETCH_QUOTES_COMPLETED, res.data.quoteResponse.result))
         } catch (e) {
+            console.log(e)
             dispatch(createAction(actionTypes.FETCH_QUOTES_ERROR, e))
         }
     }
@@ -60,28 +62,29 @@ export const fetchChart = (symbol, interval, range) => {
     }
 }
 
-export const fetchRssFeeds = (symbol, timestamp) => {
-    return async function (dispatch) {
-        dispatch(createAction(actionTypes.FETCH_RSSFEEDS_START))
-        try {
-            const res = await AWS.fetchFeeds(symbol, timestamp)
-            console.log(res)
-            dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items))
-        } catch (e) {
-            console.err(e)
-            dispatch(createAction(actionTypes.FETCH_RSSFEEDS_ERROR, e))
-        }
-    }
-}
+// export const fetchRssFeeds = (symbol, timestamp) => {
+//     console.log(timestamp)
+//     return async function (dispatch) {
+//         dispatch(createAction(actionTypes.FETCH_RSSFEEDS_START))
+//         try {
+//             const res = await AWS.fetchFeeds(symbol, timestamp)
+//             console.log(res)
+//             dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items[0]))
+//         } catch (e) {
+//             console.err(e)
+//             dispatch(createAction(actionTypes.FETCH_RSSFEEDS_ERROR, e))
+//         }
+//     }
+// }
 
 export const selectSymbol = (symbol, timestamp) => {
     return async function (dispatch) {
         dispatch(createAction(actionTypes.SELECT_SYMBOL, { symbol, timestamp }))
         dispatch(createAction(actionTypes.FETCH_RSSFEEDS_START))
         try {
-            const res = await AWS.fetchFeeds(symbol, timestamp)
+            const res = await AWS.fetchFeeds(symbol, timestamp * 1000)
             console.log(res)
-            dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items))
+            dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items[0]))
         } catch (e) {
             console.log(e)
             dispatch(createAction(actionTypes.FETCH_RSSFEEDS_ERROR, e))

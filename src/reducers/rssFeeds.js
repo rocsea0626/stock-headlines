@@ -3,8 +3,8 @@ import * as actionTypes from '../constants/actionTypes'
 
 const initialState = {
     loading: false,
-    feeds: {},
-    error: null
+    feeds: [],
+    error: undefined
 }
 
 function rssFeedsReducer(state = initialState, action) {
@@ -12,19 +12,20 @@ function rssFeedsReducer(state = initialState, action) {
     switch (action.type) {
         case actionTypes.FETCH_RSSFEEDS_START:
             return Object.assign({}, state, {
-                feeds: {},
+                feeds: [],
                 loading: true,
-                error: null
+                error: undefined
             })
         case actionTypes.FETCH_RSSFEEDS_COMPLETED:
+            console.log(action.payload)
             return Object.assign({}, state, {
-                feeds: {},
+                feeds: action.payload.items,
                 loading: false,
-                error: null
+                error: undefined
             })
         case actionTypes.FETCH_RSSFEEDS_ERROR:
             return Object.assign({}, state, {
-                feeds: {},
+                feeds: [],
                 loading: false,
                 error: action.payload
             })

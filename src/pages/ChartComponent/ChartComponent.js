@@ -3,11 +3,12 @@ import { connect } from "react-redux"
 import './ChartComponent.css';
 import { Line } from 'react-chartjs-2';
 // import Container from 'react-bootstrap/Container'
-import { Container, Spinner, Navbar, Nav, NavDropdown, Breadcrumb } from 'react-bootstrap'
+import { Container, Spinner, Navbar, Nav, NavDropdown, Row, Col, ListGroup, Button } from 'react-bootstrap'
 import { formatTimestamp, formatPrice } from '../../utils'
 import { RssFeeds, Error } from '../../layouts'
 import { selectSymbol, fetchChart } from '../../actions'
 import { API } from '../../api/constants'
+import { Link } from 'react-router-dom'
 
 class ChartComponent extends React.Component {
 
@@ -25,18 +26,6 @@ class ChartComponent extends React.Component {
         this.props.fetchChart(symbol, currentInterval, currentRange)
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log('componentDidUpdate()')
-        // console.log(prevState)
-        if (prevState.currentInterval !== this.state.currentInterval ||
-            prevState.currentRange !== this.state.currentRange) {
-
-            const { symbol } = this.props.match.params
-            const { currentInterval, currentRange } = this.state
-            this.props.fetchChart(symbol, currentInterval, currentRange)
-        }
-    }
-
     intervalOnChange = (interval) => {
         this.setState({
             currentInterval: interval
@@ -47,6 +36,34 @@ class ChartComponent extends React.Component {
         this.setState({
             currentRange: range
         })
+    }
+
+    sendOnClicked = () => {
+        const { symbol } = this.props.match.params
+        const { currentInterval, currentRange } = this.state
+        this.props.fetchChart(symbol, currentInterval, currentRange)
+    }
+
+    renderSymbols = () => {
+        const { symbol } = this.props.match.params
+
+        const symbols = this.props.symbols.map((s, idx) => {
+            return (s === symbol) ? (
+                <ListGroup.Item as="li" key={'key_symbol_list_' + idx} active>
+                    <Link to={"/chart/" + s} >{s}</Link>
+                </ListGroup.Item>
+            ) : (
+                    <ListGroup.Item as="li" key={'key_symbol_list_' + s} >
+                        <Link to={"/chart/" + s} >{s}</Link>
+                    </ListGroup.Item>
+                )
+        })
+
+        return (
+            < ListGroup as="ul" >
+                {symbols}
+            </ListGroup >
+        )
     }
 
     renderIntervalsAndRanges = () => {
@@ -72,17 +89,35 @@ class ChartComponent extends React.Component {
                 </NavDropdown.Item>
             )
         })
+        const { symbol } = this.props.match.params
+        const symbols = this.props.symbols.map((s, idx) => {
+            return (s === symbol) ? (
+                <NavDropdown.Item as="li" key={'key_symbol_list_' + idx}>
+                    <Link to={"/chart/" + s} >{s}</Link>
+                </NavDropdown.Item>
+            ) : (
+                    <NavDropdown.Item as="li" key={'key_symbol_list_' + s} >
+                        <Link to={"/chart/" + s} >{s}</Link>
+                    </NavDropdown.Item>
+                )
+        })
 
         return (
-            <Navbar bg="light" expand='sm'>
-                <Nav className="justify-content-center" activeKey="/home" >
+            <Navbar bg="light" expand='sm' justify-content-between>
+                <Navbar.Brand href="#home">
+                    <NavDropdown id="dropdown-basic-button-2" title={`${this.props.match.params.symbol}`}>
+                        {symbols}
+                    </NavDropdown>
+                </Navbar.Brand>
+                <Nav className="mr-auto">
                     <NavDropdown id="dropdown-basic-button" title={`Range: ${this.state.currentRange}`}>
                         {ranges}
                     </NavDropdown>
-                    <NavDropdown id="dropdown-basic-button" title={`Interval: ${this.state.currentInterval}`}>
+                    <NavDropdown id="dropdown-basic-button-1" title={`Interval: ${this.state.currentInterval}`}>
                         {intervals}
                     </NavDropdown>
-                </Nav >
+                    <Button variant='info' onClick={() => { this.sendOnClicked() }}>Send</Button>
+                </Nav>
             </Navbar>
 
         )
@@ -109,8 +144,8 @@ class ChartComponent extends React.Component {
         }
 
         return (
+
             <Container className="chartContainer">
-                <h1>Chart: {symbol}</h1>
                 {this.renderIntervalsAndRanges()}
                 {
                     this.props.error ? (
@@ -158,6 +193,9 @@ const mapStateToProps = state => {
         quotes: state.chart.quotes,
         loading: state.chart.loading,
         error: state.chart.error,
+        symbols: state.quotes.quotes.map((q) => {
+            return q.symbol
+        })
     }
 }
 

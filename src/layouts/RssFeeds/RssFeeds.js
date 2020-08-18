@@ -1,20 +1,27 @@
 import React from 'react'
 import { connect } from "react-redux"
-import { Jumbotron, Spinner } from 'react-bootstrap'
-import { fetchRssFeeds } from '../../actions'
+import { Jumbotron, Spinner, ListGroup, Card } from 'react-bootstrap'
 
 class RssFeeds extends React.Component {
 
-    componentDidMount() {
-        console.log('componentDidMount()')
-        const { symbol, timestamp } = this.props
-        this.props.fetchRssFeeds(symbol, timestamp)
+    renderFeeds = () => {
+        // console.log(this.props)
+        const cards = this.props.feeds.map((f, idx) => {
+            return <Card>
+                <Card.Body>
+                    <Card.Title>{f.title}</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">{f.pubDate}</Card.Subtitle>
+                    <Card.Text>{f.content}<Card.Link href={f.link}>Link</Card.Link></Card.Text>
+                </Card.Body>
+            </Card>
+        })
+
+        return (
+            <Jumbotron>{cards}</Jumbotron>
+        )
     }
 
     render() {
-        console.log('render()')
-        const { symbol, timestamp } = this.props
-
         if (this.props.loading) {
             return (
                 <Spinner animation="border" variant="primary" />
@@ -27,12 +34,7 @@ class RssFeeds extends React.Component {
                 </Jumbotron>
             )
         }
-        return (
-            <Jumbotron>
-                <h1>{symbol}</h1>
-                <p>{timestamp}</p>
-            </Jumbotron>
-        )
+        return this.renderFeeds()
     }
 }
 
@@ -47,5 +49,4 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    { fetchRssFeeds }
 )(RssFeeds)
