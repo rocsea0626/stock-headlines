@@ -6,17 +6,14 @@ class Header extends React.Component {
 
     render() {
         return (
-            <header>
-                <Navbar bg="light">
-                    <Navbar.Brand>
-                        <Link to="/">
-                            Stocks & Headlines
-                        </Link>
-                    </Navbar.Brand>
-                </Navbar>
-            </header>
-
-        );
+            <Navbar sticky="top" bg="light">
+                <Navbar.Brand>
+                    <Link to="/">
+                        Stocks & Headlines
+                    </Link>
+                </Navbar.Brand>
+            </Navbar>
+        )
     }
 }
 

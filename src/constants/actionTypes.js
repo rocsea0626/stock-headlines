@@ -14,4 +14,8 @@ export const FETCH_RSSFEEDS_START = "fetch_rssfeeds_start";
 export const FETCH_RSSFEEDS_COMPLETED = "fetch_rssfeeds_completed";
 export const FETCH_RSSFEEDS_ERROR = "fetch_rssfeeds_error";
 
+export const ADD_SYMBOL_START = "add_symbol_start";
+export const ADD_SYMBOL_COMPLETED = "add_symbol_completed";
+export const ADD_SYMBOL_ERROR = "add_symbol_error";
+
 export const SELECT_SYMBOL = "select_symbol";

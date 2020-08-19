@@ -1,17 +1,16 @@
 import * as React from "react";
-import Container from "react-bootstrap/Container";
+import { Navbar, Container } from "react-bootstrap"
 import './Footer.css';
 
 class Footer extends React.Component {
     render() {
-        console.log('render()')
         return (
-            <footer className="footer">
-                <Container>
+            <Navbar sticky="bottom" bg="light">
+                <Navbar.Brand>
                     Copyright GHP Arctic
-                </Container>
-            </footer>
-        );
+                </Navbar.Brand>
+            </Navbar>
+        )
     }
 }
 

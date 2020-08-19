@@ -1,29 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
-    StocksList, Header, Footer, SiteLocation
+    StocksList, Header, Footer
 } from '../../layouts'
 import {
     Route, BrowserRouter as Router, Switch
 } from 'react-router-dom'
+import { connect } from "react-redux"
 import { ChartComponent, NotFound } from '../'
+import { fetchQuotes } from '../../actions'
 
+function App(props) {
 
-const withBreadCrumbs = (WrappedComponent) => {
-    return class extends React.Component {
-        render() {
-            return (
-                <React.Fragment>
-                    <SiteLocation {...this.props}/>
-                    <WrappedComponent {...this.props} />
-                </React.Fragment>
-            )
-          }
-    }
-}
+    useEffect(() => {
+        props.fetchQuotes()
+    })
 
-function App() {
     return (
         <Router>
             <Header />
@@ -40,4 +33,7 @@ function App() {
     )
 }
 
-export default App;
+export default connect(
+    null,
+    { fetchQuotes }
+)(App)

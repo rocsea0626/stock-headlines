@@ -32,3 +32,21 @@ export function fetchSymbols() {
         setTimeout(() => res(symbols), 500);
     })
 }
+
+
+export function addSymbol(symbol) {
+
+    // if (process.env.REACT_APP_DATE_SOURCE === 'local') {
+    //     return new Promise((res, rej)=>{
+    //         setTimeout(() => res(symbols.push(symbol)), 500);
+    //     })
+    // }
+    const relativePath = 'symbols'
+
+    return axios.post(
+        API.aws.baseUrl + relativePath,
+        {
+            "symbol": symbol
+        }
+    )
+}

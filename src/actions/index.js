@@ -30,9 +30,12 @@ export const fetchQuotes = () => {
             dispatch(createAction(actionTypes.FETCH_SYMBOLS_ERROR, e))
         }
         try {
+            const apiName = api.NAME.YahooFree
             dispatch(createAction(actionTypes.FETCH_QUOTES_START))
-            const res = await api.fetchQuotes(api.NAME.YahooFree,symbols)
-            dispatch(createAction(actionTypes.FETCH_QUOTES_COMPLETED, res.data.quoteResponse.result))
+            const res = await api.fetchQuotes(apiName,symbols)
+            const payload = api.parseResponseQuotes(apiName, res)
+            // console.log(payload)
+            dispatch(createAction(actionTypes.FETCH_QUOTES_COMPLETED, payload))
         } catch (e) {
             console.log(e)
             dispatch(createAction(actionTypes.FETCH_QUOTES_ERROR, e))
@@ -74,4 +77,18 @@ export const selectSymbol = (symbol, timestamp) => {
 
     }
 
+}
+
+export function addSymbol(symbol) {
+    return async function (dispatch) {
+        dispatch(createAction(actionTypes.ADD_SYMBOL_START))
+        try {
+            const res = await api.addSymbol(symbol)
+            dispatch(createAction(actionTypes.ADD_SYMBOL_COMPLETED, res.data.symbols))
+        } catch (e) {
+            console.log(e)
+            dispatch(createAction(actionTypes.ADD_SYMBOL_ERROR, e))
+        }
+
+    }
 }

@@ -1,24 +1,48 @@
 import * as React from "react";
-import { Table, Row, Col } from 'react-bootstrap';
+import { Table, Row, Col, Navbar, Form, FormControl, Button, Container } from 'react-bootstrap';
 import './StocksList.css';
 import { Link } from 'react-router-dom';
 import { formatPercentage, formatPrice } from '../../utils';
 import { connect } from "react-redux"
-import { fetchQuotes } from '../../actions'
 import Spinner from 'react-bootstrap/Spinner'
+import { addSymbol } from '../../actions'
 
 class StocksList extends React.Component {
 
-    componentDidMount() {
-        this.props.fetchQuotes()
+    constructor(props) {
+        super(props)
+        this.inputAddSymbol = React.createRef()
     }
 
     isIncreasing = (change) => {
         return change > 0
     }
 
+    onAddClicked = () => {
+        // console.log(this.inputAddSymbol.current.value)
+        this.props.addSymbol(this.inputAddSymbol.current.value)
+        this.inputAddSymbol.current.value = ''
+    }
+
+    renderToolbar = () => {
+        return (
+            <Navbar bg="light" expand='sm'>
+                <Form inline>
+                    <FormControl
+                        type="text"
+                        placeholder="Add stock symbol"
+                        className="mr-sm-2"
+                        ref={this.inputAddSymbol}
+                    />
+                    <Button variant='outline-info' onClick={(e) => { this.onAddClicked(e) }}>Send</Button>
+                </Form>
+            </Navbar>
+        )
+    }
+
     renderStocks = () => {
-        const rows = this.props.quotes.map((q, idx) => {
+        const rows = Object.keys(this.props.quotes).map((key, idx) => {
+            const q = this.props.quotes[key]
             return (
                 <tr key={idx}>
                     <td>{idx + 1}</td>
@@ -54,41 +78,42 @@ class StocksList extends React.Component {
             return <Spinner animation="border" variant="primary" />
         }
         return (
-            <Row>
-                <Col lg={11} xl={10}>
-                    <Table hover="true">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Symbol</th>
-                                <th>Name</th>
-                                <th>Exchange</th>
-                                <th>Price</th>
-                                <th>Change</th>
-                                <th>Volume</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.renderStocks()}
-                        </tbody>
-                    </Table>
-                </Col>
-            </Row>
+            <Container>
+                {this.renderToolbar()}
+                <Table hover="true">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>Exchange</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.renderStocks()}
+                    </tbody>
+                </Table>
+            </Container>
 
-        );
+
+        )
     }
 }
 
 const mapStateToProps = state => {
     return {
         quotes: state.quotes.quotes,
+        symbols: state.quotes.symbols,
         loading: state.quotes.loading
     }
 }
 
 export default connect(
     mapStateToProps,
-    { fetchQuotes }
+    { addSymbol }
 )(StocksList)
 
 
