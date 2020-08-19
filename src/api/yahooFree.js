@@ -67,3 +67,11 @@ export function parseChartResponse(res) {
     })
     return result
 }
+
+export function parseChartQuotes(res) {
+    const result = {}
+    res.data.quoteResponse.result.forEach((r, idx) => {
+        result[r.symbol] = r
+    })
+    return result
+}

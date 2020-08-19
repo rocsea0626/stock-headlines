@@ -8,35 +8,35 @@ const createAction = (type, payload) => {
     }
 }
 
-export const fetchSymbols = (dispatch) => {
-    dispatch(createAction(actionTypes.FETCH_SYMBOLS_START))
-    api.fetchSymbols()
-        .then((symbols) => {
-            dispatch(createAction(actionTypes.FETCH_SYMBOLS_COMPLETED, symbols))
-        })
-        .catch((err) => {
-            dispatch(createAction(actionTypes.FETCH_SYMBOLS_ERROR, err))
-        })
+const fetchSymbols = async (dispatch) => {
+    try {
+        dispatch(createAction(actionTypes.FETCH_SYMBOLS_START))
+        const res = await api.fetchSymbols()
+        const symbols = res.data.symbols
+        dispatch(createAction(actionTypes.FETCH_SYMBOLS_COMPLETED, symbols))
+        return symbols
+    } catch (e) {
+        dispatch(createAction(actionTypes.FETCH_SYMBOLS_ERROR, e))
+    }
 }
 
-export const fetchQuotes = () => {
+const fetchQuotes = async (dispatch, symbols) => {
+    try {
+        const apiName = api.NAME.YahooFree
+        dispatch(createAction(actionTypes.FETCH_QUOTES_START))
+        const res = await api.fetchQuotes(apiName, symbols)
+        const payload = api.parseResponseQuotes(apiName, res)
+        dispatch(createAction(actionTypes.FETCH_QUOTES_COMPLETED, payload))
+    } catch (e) {
+        console.log(e)
+        dispatch(createAction(actionTypes.FETCH_QUOTES_ERROR, e))
+    }
+}
+
+export const fetchSymbolsAndQuotes = () => {
     return async function (dispatch) {
-        dispatch(createAction(actionTypes.FETCH_SYMBOLS_START))
-        let symbols
-        try {
-            symbols = await api.fetchSymbols()
-            dispatch(createAction(actionTypes.FETCH_SYMBOLS_COMPLETED, symbols))
-        } catch (e) {
-            dispatch(createAction(actionTypes.FETCH_SYMBOLS_ERROR, e))
-        }
-        try {
-            dispatch(createAction(actionTypes.FETCH_QUOTES_START))
-            const res = await api.fetchQuotes(api.NAME.YahooFree,symbols)
-            dispatch(createAction(actionTypes.FETCH_QUOTES_COMPLETED, res.data.quoteResponse.result))
-        } catch (e) {
-            console.log(e)
-            dispatch(createAction(actionTypes.FETCH_QUOTES_ERROR, e))
-        }
+        const symbols = await fetchSymbols(dispatch)
+        fetchQuotes(dispatch, symbols)
     }
 }
 
@@ -47,7 +47,7 @@ export const fetchChart = (symbol, interval, range) => {
         const apiName = api.NAME.YahooFree
         try {
             const res = await api.fetchChart(apiName, symbol, interval, range)
-            if(res.data.chart.error){
+            if (res.data.chart.error) {
                 // console.log(res.data.chart.error)
                 throw new Error(res.data.chart.error.code, res.data.chart.error.description)
             }
@@ -74,4 +74,20 @@ export const selectSymbol = (symbol, timestamp) => {
 
     }
 
+}
+
+export function addSymbol(symbol) {
+    return async function (dispatch) {
+        dispatch(createAction(actionTypes.ADD_SYMBOL_START))
+        try {
+            const res = await api.addSymbol(symbol)
+            const symbols = res.data.symbols
+            dispatch(createAction(actionTypes.ADD_SYMBOL_COMPLETED, symbols))
+            fetchQuotes(dispatch, symbols)
+        } catch (e) {
+            console.log(e)
+            dispatch(createAction(actionTypes.ADD_SYMBOL_ERROR, e))
+        }
+
+    }
 }

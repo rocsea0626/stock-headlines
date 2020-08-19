@@ -1,15 +1,11 @@
 import React from 'react'
 import { connect } from "react-redux"
 import './ChartComponent.css';
-import { Line } from 'react-chartjs-2';
-// import Container from 'react-bootstrap/Container'
 import { Container, Spinner, Navbar, Nav, NavDropdown, ListGroup, Button, Form } from 'react-bootstrap'
-import { formatTimestamp, formatPrice } from '../../utils'
 import { RssFeeds, Error } from '../../layouts'
 import { selectSymbol, fetchChart } from '../../actions'
 import * as api from '../../api'
 import { Link } from 'react-router-dom'
-import { TypeChooser } from "react-stockcharts/lib/helper"
 import Chart from './Chart'
 
 class ChartComponent extends React.Component {
@@ -126,47 +122,6 @@ class ChartComponent extends React.Component {
         )
     }
 
-    renderChart = () => {
-        const { symbol } = this.props.match.params
-        const data = {
-            labels: this.props.timestamps.map((ts) => {
-                return formatTimestamp(ts)
-            }),
-            datasets: [{
-                label: symbol,
-                data: this.props.quotes.map((p) => {
-                    return formatPrice(p)
-                }),
-                fill: 'none',
-                backgroundColor: "red",
-                pointRadius: 2,
-                borderColor: "red",
-                borderWidth: 1,
-                lineTension: 0
-            }]
-        }
-
-        return (
-
-            <Container className="chartContainer">
-                {this.renderIntervalsAndRanges()}
-                {
-                    this.props.error ? (
-                        <Error error={this.props.error} />
-                    ) : (<Line
-                        data={data}
-                        onElementsClick={(elems) => { this.onDateClicked(elems) }}
-                    />)
-                }
-                {
-                    !!this.props.selectedTimeStamp ? <RssFeeds
-                        symbol={symbol}
-                    /> : ''
-                }
-            </Container>
-        )
-    }
-
     renderAreaChart = () => {
         const { symbol } = this.props.match.params
 
@@ -200,21 +155,9 @@ class ChartComponent extends React.Component {
             )
         }
 
-        // return this.renderChart()
-
         return this.renderAreaChart()
     }
 
-    onDateClicked = (elems) => {
-
-        if (elems[0]) {
-            const idx = elems[0]._index
-            const ts = this.props.timestamps[idx]
-            const { symbol } = this.props.match.params
-            this.props.selectSymbol(symbol, ts)
-        }
-    }
-    
     onElementClicked = (elem) => {
         const { symbol } = this.props.match.params
         const ts = new Date(elem.currentItem.date).valueOf()
@@ -225,14 +168,10 @@ class ChartComponent extends React.Component {
 const mapStateToProps = state => {
     return {
         selectedTimeStamp: state.chart.selectedTimeStamp,
-        timestamps: state.chart.timestamps,
-        quotes: state.chart.quotes,
         data: state.chart.data,
         loading: state.chart.loading,
         error: state.chart.error,
-        symbols: state.quotes.quotes.map((q) => {
-            return q.symbol
-        })
+        symbols: state.quotes.symbols
     }
 }
 

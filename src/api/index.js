@@ -51,9 +51,21 @@ const parseResponseChart = (apiName, res) => {
     return YahooFree.parseChartResponse(res)
 }
 
+const parseResponseQuotes = (apiName, res) => {
+    if(apiName === NAME.Yahoo)
+        return Yahoo.parseChartQuotes(res)
+
+    return YahooFree.parseChartQuotes(res)
+}
+
 const fetchFeeds = (symbol, timestamp) => {
     return AWS.fetchFeeds(symbol, timestamp)
 }
+
+const addSymbol = (symbol) => {
+    return AWS.addSymbol(symbol)
+}
+
 
 export {
     NAME,
@@ -63,6 +75,8 @@ export {
     fetchChart,
     fetchFeeds,
     parseResponseChart,
+    parseResponseQuotes,
+    addSymbol,
     getInterval,
     getRange,
     getAllowedIntervals,

@@ -64,3 +64,11 @@ export function parseChartResponse(res) {
         quotes: res.data.chart.result[0].indicators.quote[0].close,
     }
 }
+
+export function parseChartQuotes(res) {
+    const result = {}
+    res.data.quoteResponse.result.forEach((r, idx) => {
+        result[r.symbol] = r
+    })
+    return result
+}
