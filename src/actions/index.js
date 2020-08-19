@@ -1,6 +1,5 @@
 import * as actionTypes from '../constants/actionTypes'
-import { AWS, Yahoo } from '../api'
-import { connect } from 'react-redux'
+import * as api from '../api'
 
 const createAction = (type, payload) => {
     return {
@@ -11,7 +10,7 @@ const createAction = (type, payload) => {
 
 export const fetchSymbols = (dispatch) => {
     dispatch(createAction(actionTypes.FETCH_SYMBOLS_START))
-    AWS.fetchSymbols()
+    api.fetchSymbols()
         .then((symbols) => {
             dispatch(createAction(actionTypes.FETCH_SYMBOLS_COMPLETED, symbols))
         })
@@ -25,14 +24,14 @@ export const fetchQuotes = () => {
         dispatch(createAction(actionTypes.FETCH_SYMBOLS_START))
         let symbols
         try {
-            symbols = await AWS.fetchSymbols()
+            symbols = await api.fetchSymbols()
             dispatch(createAction(actionTypes.FETCH_SYMBOLS_COMPLETED, symbols))
         } catch (e) {
             dispatch(createAction(actionTypes.FETCH_SYMBOLS_ERROR, e))
         }
         try {
             dispatch(createAction(actionTypes.FETCH_QUOTES_START))
-            const res = await Yahoo.fetchQuotes(symbols)
+            const res = await api.fetchQuotes(api.NAME.YahooFree,symbols)
             dispatch(createAction(actionTypes.FETCH_QUOTES_COMPLETED, res.data.quoteResponse.result))
         } catch (e) {
             console.log(e)
@@ -45,16 +44,15 @@ export const fetchChart = (symbol, interval, range) => {
     console.log(`fetchChart(${symbol}, ${interval}, ${range})`)
     return async function (dispatch) {
         dispatch(createAction(actionTypes.FETCH_CHART_START))
+        const apiName = api.NAME.YahooFree
         try {
-            const res = await Yahoo.fetchChart(symbol, interval, range)
+            const res = await api.fetchChart(apiName, symbol, interval, range)
             if(res.data.chart.error){
                 // console.log(res.data.chart.error)
                 throw new Error(res.data.chart.error.code, res.data.chart.error.description)
             }
-            const payload = {
-                timestamps: res.data.chart.result[0].timestamp,
-                quotes: res.data.chart.result[0].indicators.quote[0].close,
-            }
+            const payload = api.parseResponseChart(apiName, res)
+            // console.log(payload)
             dispatch(createAction(actionTypes.FETCH_CHART_COMPLETED, payload))
         } catch (e) {
             dispatch(createAction(actionTypes.FETCH_CHART_ERROR, e))
@@ -62,28 +60,12 @@ export const fetchChart = (symbol, interval, range) => {
     }
 }
 
-// export const fetchRssFeeds = (symbol, timestamp) => {
-//     console.log(timestamp)
-//     return async function (dispatch) {
-//         dispatch(createAction(actionTypes.FETCH_RSSFEEDS_START))
-//         try {
-//             const res = await AWS.fetchFeeds(symbol, timestamp)
-//             console.log(res)
-//             dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items[0]))
-//         } catch (e) {
-//             console.err(e)
-//             dispatch(createAction(actionTypes.FETCH_RSSFEEDS_ERROR, e))
-//         }
-//     }
-// }
-
 export const selectSymbol = (symbol, timestamp) => {
     return async function (dispatch) {
         dispatch(createAction(actionTypes.SELECT_SYMBOL, { symbol, timestamp }))
         dispatch(createAction(actionTypes.FETCH_RSSFEEDS_START))
         try {
-            const res = await AWS.fetchFeeds(symbol, timestamp * 1000)
-            console.log(res)
+            const res = await api.fetchFeeds(symbol, timestamp)
             dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items[0]))
         } catch (e) {
             console.log(e)

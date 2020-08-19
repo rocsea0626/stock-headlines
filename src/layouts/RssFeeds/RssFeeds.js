@@ -7,7 +7,7 @@ class RssFeeds extends React.Component {
     renderFeeds = () => {
         // console.log(this.props)
         const cards = this.props.feeds.map((f, idx) => {
-            return <Card>
+            return <Card key={'key_card_' + idx}>
                 <Card.Body>
                     <Card.Title>{f.title}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">{f.pubDate}</Card.Subtitle>

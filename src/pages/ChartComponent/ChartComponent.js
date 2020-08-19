@@ -3,20 +3,22 @@ import { connect } from "react-redux"
 import './ChartComponent.css';
 import { Line } from 'react-chartjs-2';
 // import Container from 'react-bootstrap/Container'
-import { Container, Spinner, Navbar, Nav, NavDropdown, Row, Col, ListGroup, Button } from 'react-bootstrap'
+import { Container, Spinner, Navbar, Nav, NavDropdown, ListGroup, Button, Form } from 'react-bootstrap'
 import { formatTimestamp, formatPrice } from '../../utils'
 import { RssFeeds, Error } from '../../layouts'
 import { selectSymbol, fetchChart } from '../../actions'
-import { API } from '../../api/constants'
+import * as api from '../../api'
 import { Link } from 'react-router-dom'
+import { TypeChooser } from "react-stockcharts/lib/helper"
+import Chart from './Chart'
 
 class ChartComponent extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            currentInterval: API.yahoo.interval,
-            currentRange: API.yahoo.range
+            currentInterval: api.getInterval(),
+            currentRange: api.getRange()
         }
     }
     componentDidMount() {
@@ -68,7 +70,7 @@ class ChartComponent extends React.Component {
 
     renderIntervalsAndRanges = () => {
 
-        const intervals = API.yahoo.allowed.intervals.map((interval, idx) => {
+        const intervals = api.getAllowedIntervals().map((interval, idx) => {
             return (
                 <NavDropdown.Item
                     key={'key_btn_interval_' + idx}
@@ -79,7 +81,7 @@ class ChartComponent extends React.Component {
             )
         })
 
-        const ranges = API.yahoo.allowed.range.map((range, idx) => {
+        const ranges = api.getAllowedRanges().map((range, idx) => {
             return (
                 <NavDropdown.Item
                     key={'key_btn_range_' + idx}
@@ -103,13 +105,14 @@ class ChartComponent extends React.Component {
         })
 
         return (
-            <Navbar bg="light" expand='sm' justify-content-between>
-                <Navbar.Brand href="#home">
+            <Navbar bg="light" expand='sm'>
+                <Nav className="mr-auto">
                     <NavDropdown id="dropdown-basic-button-2" title={`${this.props.match.params.symbol}`}>
                         {symbols}
                     </NavDropdown>
-                </Navbar.Brand>
-                <Nav className="mr-auto">
+
+                </Nav>
+                <Form inline>
                     <NavDropdown id="dropdown-basic-button" title={`Range: ${this.state.currentRange}`}>
                         {ranges}
                     </NavDropdown>
@@ -117,7 +120,7 @@ class ChartComponent extends React.Component {
                         {intervals}
                     </NavDropdown>
                     <Button variant='info' onClick={() => { this.sendOnClicked() }}>Send</Button>
-                </Nav>
+                </Form>
             </Navbar>
 
         )
@@ -164,15 +167,42 @@ class ChartComponent extends React.Component {
         )
     }
 
+    renderAreaChart = () => {
+        const { symbol } = this.props.match.params
+
+        return (
+            <Container className="chartContainer">
+                {this.renderIntervalsAndRanges()}
+                {
+                    this.props.error ? (
+                        <Error error={this.props.error} />
+                    ) : (
+                            <Chart
+                                data={this.props.data}
+                                symbol={symbol}
+                                onElemClicked={(elem) => { this.onElementClicked(elem) }}
+                            />
+                        )
+                }
+                {
+                    !!this.props.selectedTimeStamp ? <RssFeeds
+                        symbol={symbol}
+                    /> : ''
+                }
+            </Container>
+        )
+    }
+
     render() {
-        console.log('render()')
         if (this.props.loading) {
             return (
                 <Spinner animation="border" variant="primary" />
             )
         }
 
-        return this.renderChart()
+        // return this.renderChart()
+
+        return this.renderAreaChart()
     }
 
     onDateClicked = (elems) => {
@@ -184,6 +214,12 @@ class ChartComponent extends React.Component {
             this.props.selectSymbol(symbol, ts)
         }
     }
+    
+    onElementClicked = (elem) => {
+        const { symbol } = this.props.match.params
+        const ts = new Date(elem.currentItem.date).valueOf()
+        this.props.selectSymbol(symbol, ts)
+    }
 }
 
 const mapStateToProps = state => {
@@ -191,6 +227,7 @@ const mapStateToProps = state => {
         selectedTimeStamp: state.chart.selectedTimeStamp,
         timestamps: state.chart.timestamps,
         quotes: state.chart.quotes,
+        data: state.chart.data,
         loading: state.chart.loading,
         error: state.chart.error,
         symbols: state.quotes.quotes.map((q) => {

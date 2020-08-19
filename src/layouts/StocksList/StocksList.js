@@ -1,5 +1,5 @@
 import * as React from "react";
-import Table from 'react-bootstrap/Table';
+import { Table, Row, Col } from 'react-bootstrap';
 import './StocksList.css';
 import { Link } from 'react-router-dom';
 import { formatPercentage, formatPrice } from '../../utils';
@@ -54,22 +54,27 @@ class StocksList extends React.Component {
             return <Spinner animation="border" variant="primary" />
         }
         return (
-            <Table hover="true">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Symbol</th>
-                        <th>Name</th>
-                        <th>Exchange</th>
-                        <th>Price</th>
-                        <th>Change</th>
-                        <th>Volume</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.renderStocks()}
-                </tbody>
-            </Table>
+            <Row>
+                <Col lg={11} xl={10}>
+                    <Table hover="true">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Symbol</th>
+                                <th>Name</th>
+                                <th>Exchange</th>
+                                <th>Price</th>
+                                <th>Change</th>
+                                <th>Volume</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.renderStocks()}
+                        </tbody>
+                    </Table>
+                </Col>
+            </Row>
+
         );
     }
 }

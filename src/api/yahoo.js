@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { API } from './constants';
 import {result} from '../data/mock/quotes'
+import {charts} from '../data/mock/charts'
 
 
 
 export function fetchQuotes(symbols) {
     if (process.env.REACT_APP_DATE_SOURCE === 'local') {
         return new Promise((res, rej)=>{
-            console.log('use local mock data')
+            console.log('fetchQuotes(), use local mock data')
             setTimeout(() => res(result), 500)
         })
     }
@@ -27,7 +28,14 @@ export function fetchQuotes(symbols) {
 }
 
 
-export function fetchChart(symbol, interval = API.yahoo.interval, range = API.yahoo.range) {
+export function fetchChart(symbol, interval = API.yahooFree.resources.chart.interval, range = API.yahooFree.resources.chart.range) {
+
+    if (process.env.REACT_APP_DATE_SOURCE === 'local') {
+        return new Promise((res, rej)=>{
+            console.log('fetchChart('+symbol+'), use local mock data')
+            setTimeout(() => res(charts[symbol]), 500)
+        })
+    }
 
     return axios.get(
         "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts",
@@ -44,3 +52,15 @@ export function fetchChart(symbol, interval = API.yahoo.interval, range = API.ya
     )
 }
 
+/**
+ * Parse response of chart/ endpoint from Yahoo Api 
+ * 
+ * @param {object} res - response from Yahoo Api 
+ * @return {object} payload - in format {timestamps, quotes}
+ */
+export function parseChartResponse(res) {
+    return {
+        timestamps: res.data.chart.result[0].timestamp,
+        quotes: res.data.chart.result[0].indicators.quote[0].close,
+    }
+}

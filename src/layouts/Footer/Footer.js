@@ -4,6 +4,7 @@ import './Footer.css';
 
 class Footer extends React.Component {
     render() {
+        console.log('render()')
         return (
             <footer className="footer">
                 <Container>

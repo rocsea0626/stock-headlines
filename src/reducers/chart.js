@@ -5,6 +5,7 @@ const initialState = {
     loading: false,
     selectedTimeStamp: 0,
     timestamps: [],
+    data: {},
     quotes: [],
     error: undefined
 }
@@ -14,25 +15,28 @@ function chartReducer(state = initialState, action) {
     switch (action.type) {
         case actionTypes.FETCH_CHART_START:
             return Object.assign({}, state, {
-                timestamps: [],
-                quotes: [],
+                // timestamps: [],
+                // quotes: [],
                 loading: true,
                 selectedTimeStamp: 0,
+                data: {},
                 error: undefined
             })
         case actionTypes.FETCH_CHART_COMPLETED:
             return Object.assign({}, state, {
-                timestamps: action.payload.timestamps,
-                quotes: action.payload.quotes,
+                // timestamps: action.payload.timestamps,
+                // quotes: action.payload.quotes,
                 selectedTimeStamp: 0,
+                data: action.payload,
                 loading: false,
                 error: undefined
             })
         case actionTypes.FETCH_CHART_ERROR:
             console.log(action)
             return Object.assign({}, state, {
-                timestamps: [],
-                quotes: [],
+                // timestamps: [],
+                // quotes: [],
+                data: {},
                 loading: false,
                 selectedTimeStamp: 0,
                 error: action.payload
