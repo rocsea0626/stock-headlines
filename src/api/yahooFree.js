@@ -1,12 +1,22 @@
 import axios from 'axios';
 import { API } from './constants';
-import { result } from '../data/mock/quotes'
+import { data as quotes } from '../data/mock/quotes'
 import { charts } from '../data/mock/charts'
 
 export function fetchQuotes(symbols) {
     if (process.env.REACT_APP_DATE_SOURCE === 'local') {
         return new Promise((res, rej) => {
             console.log('fetchQuotes(), use local mock data')
+            const result = {
+                data: {
+                    quoteResponse: {
+                        result: quotes.filter((q)=>{
+                            return symbols.indexOf(q.symbol)>=0
+                        }),
+                        error: null
+                    }
+                }
+            }
             setTimeout(() => res(result), 500)
         })
     }

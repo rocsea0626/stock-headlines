@@ -18,4 +18,8 @@ export const ADD_SYMBOL_START = "add_symbol_start";
 export const ADD_SYMBOL_COMPLETED = "add_symbol_completed";
 export const ADD_SYMBOL_ERROR = "add_symbol_error";
 
+export const REMOVE_SYMBOL_START = "remove_symbol_start";
+export const REMOVE_SYMBOL_COMPLETED = "remove_symbol_completed";
+export const REMOVE_SYMBOL_ERROR = "remove_symbol_error";
+
 export const SELECT_SYMBOL = "select_symbol";

@@ -8,7 +8,7 @@ import {
     Route, BrowserRouter as Router, Switch
 } from 'react-router-dom'
 import { connect } from "react-redux"
-import { ChartComponent, NotFound } from '../'
+import { ChartComponent, NotFound } from '..'
 import { fetchSymbolsAndQuotes } from '../../actions'
 
 function App(props) {

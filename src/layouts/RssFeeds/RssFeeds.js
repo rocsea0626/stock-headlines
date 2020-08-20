@@ -5,8 +5,15 @@ import { Jumbotron, Spinner, ListGroup, Card } from 'react-bootstrap'
 class RssFeeds extends React.Component {
 
     renderFeeds = () => {
-        // console.log(this.props)
-        const cards = this.props.feeds.map((f, idx) => {
+
+        const { feeds } = this.props
+        if (feeds.length <= 0) {
+            return (
+                <Jumbotron>No Feeds on {new Date(this.props.timestamp).toDateString()}</Jumbotron>
+            )
+        }
+
+        const cards = feeds.map((f, idx) => {
             return <Card key={'key_card_' + idx}>
                 <Card.Body>
                     <Card.Title>{f.title}</Card.Title>
@@ -19,6 +26,7 @@ class RssFeeds extends React.Component {
         return (
             <Jumbotron>{cards}</Jumbotron>
         )
+
     }
 
     render() {

@@ -66,6 +66,10 @@ const addSymbol = (symbol) => {
     return AWS.addSymbol(symbol)
 }
 
+const removeSymbol = (symbol) => {
+    return AWS.removeSymbol(symbol)
+}
+
 
 export {
     NAME,
@@ -77,6 +81,7 @@ export {
     parseResponseChart,
     parseResponseQuotes,
     addSymbol,
+    removeSymbol,
     getInterval,
     getRange,
     getAllowedIntervals,
