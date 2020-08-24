@@ -47,6 +47,7 @@ export const fetchChart = (symbol, interval, range) => {
         const apiName = api.NAME.YahooFree
         try {
             const res = await api.fetchChart(apiName, symbol, interval, range)
+            console.log(res)
             if (res.data.chart.error) {
                 // console.log(res.data.chart.error)
                 throw new Error(res.data.chart.error.code, res.data.chart.error.description)
@@ -66,7 +67,12 @@ export const selectSymbol = (symbol, timestamp) => {
         dispatch(createAction(actionTypes.FETCH_RSSFEEDS_START))
         try {
             const res = await api.fetchFeeds(symbol, timestamp)
-            dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items[0]))
+            console.log(res)
+            if(res.data.text.Count){
+                dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items[0].items))
+            } else {
+                dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, []))
+            }
         } catch (e) {
             console.log(e)
             dispatch(createAction(actionTypes.FETCH_RSSFEEDS_ERROR, e))
@@ -87,6 +93,20 @@ export function addSymbol(symbol) {
         } catch (e) {
             console.log(e)
             dispatch(createAction(actionTypes.ADD_SYMBOL_ERROR, e))
+        }
+
+    }
+}
+
+export function removeSymbol(symbol) {
+    return async function (dispatch) {
+        dispatch(createAction(actionTypes.REMOVE_SYMBOL_START))
+        try {
+            await api.removeSymbol(symbol)
+            dispatch(createAction(actionTypes.REMOVE_SYMBOL_COMPLETED, symbol))
+        } catch (e) {
+            console.log(e)
+            dispatch(createAction(actionTypes.REMOVE_SYMBOL_ERROR, e))
         }
 
     }

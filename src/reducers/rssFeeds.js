@@ -8,7 +8,7 @@ const initialState = {
 }
 
 function rssFeedsReducer(state = initialState, action) {
-    console.log(action.type)
+    // console.log(action.type)
     switch (action.type) {
         case actionTypes.FETCH_RSSFEEDS_START:
             return Object.assign({}, state, {
@@ -17,9 +17,8 @@ function rssFeedsReducer(state = initialState, action) {
                 error: undefined
             })
         case actionTypes.FETCH_RSSFEEDS_COMPLETED:
-            console.log(action.payload)
             return Object.assign({}, state, {
-                feeds: action.payload.items,
+                feeds: action.payload,
                 loading: false,
                 error: undefined
             })
@@ -30,9 +29,8 @@ function rssFeedsReducer(state = initialState, action) {
                 error: action.payload
             })
         default:
-            break
+            return state
     }
-    return state;
 }
 
 export default rssFeedsReducer

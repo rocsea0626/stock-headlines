@@ -4,7 +4,7 @@ import * as actionTypes from '../constants/actionTypes'
 const initialState = {
     loading: false,
     selectedTimeStamp: 0,
-    data: {},
+    data: [],
     error: undefined
 }
 
@@ -15,7 +15,7 @@ function chartReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 loading: true,
                 selectedTimeStamp: 0,
-                data: {},
+                data: [],
                 error: undefined
             })
         case actionTypes.FETCH_CHART_COMPLETED:
@@ -28,7 +28,7 @@ function chartReducer(state = initialState, action) {
         case actionTypes.FETCH_CHART_ERROR:
             console.log(action)
             return Object.assign({}, state, {
-                data: {},
+                data: [],
                 loading: false,
                 selectedTimeStamp: 0,
                 error: action.payload
@@ -38,9 +38,8 @@ function chartReducer(state = initialState, action) {
                 selectedTimeStamp: action.payload.timestamp,
             })
         default:
-            break
+            return state
     }
-    return state;
 }
 
 export default chartReducer

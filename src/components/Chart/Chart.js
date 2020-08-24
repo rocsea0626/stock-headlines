@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from "react-redux"
-import './ChartComponent.css';
-import { Container, Spinner, Navbar, Nav, NavDropdown, ListGroup, Button, Form } from 'react-bootstrap'
-import { RssFeeds, Error } from '../../layouts'
+import './Chart.css';
+import { Container, Spinner, Navbar, Nav, NavDropdown, Button, Form } from 'react-bootstrap'
+import { RssFeeds, Error } from '../../components'
 import { selectSymbol, fetchChart } from '../../actions'
 import * as api from '../../api'
 import { Link } from 'react-router-dom'
-import Chart from './Chart'
+import Chart from './CandlestickChart'
 
 class ChartComponent extends React.Component {
 
@@ -18,10 +18,17 @@ class ChartComponent extends React.Component {
         }
     }
     componentDidMount() {
-        console.log('componentDidMount()')
         const { symbol } = this.props.match.params
         const { currentInterval, currentRange } = this.state
         this.props.fetchChart(symbol, currentInterval, currentRange)
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { symbol } = this.props.match.params
+        const { currentInterval, currentRange } = this.state
+        if (prevProps.match.params.symbol !== symbol) {
+            this.props.fetchChart(symbol, currentInterval, currentRange)
+        }
     }
 
     intervalOnChange = (interval) => {
@@ -40,28 +47,6 @@ class ChartComponent extends React.Component {
         const { symbol } = this.props.match.params
         const { currentInterval, currentRange } = this.state
         this.props.fetchChart(symbol, currentInterval, currentRange)
-    }
-
-    renderSymbols = () => {
-        const { symbol } = this.props.match.params
-
-        const symbols = this.props.symbols.map((s, idx) => {
-            return (s === symbol) ? (
-                <ListGroup.Item as="li" key={'key_symbol_list_' + idx} active>
-                    <Link to={"/chart/" + s} >{s}</Link>
-                </ListGroup.Item>
-            ) : (
-                    <ListGroup.Item as="li" key={'key_symbol_list_' + s} >
-                        <Link to={"/chart/" + s} >{s}</Link>
-                    </ListGroup.Item>
-                )
-        })
-
-        return (
-            < ListGroup as="ul" >
-                {symbols}
-            </ListGroup >
-        )
     }
 
     renderIntervalsAndRanges = () => {
@@ -87,17 +72,12 @@ class ChartComponent extends React.Component {
                 </NavDropdown.Item>
             )
         })
-        const { symbol } = this.props.match.params
         const symbols = this.props.symbols.map((s, idx) => {
-            return (s === symbol) ? (
+            return (
                 <NavDropdown.Item as="li" key={'key_symbol_list_' + idx}>
                     <Link to={"/chart/" + s} >{s}</Link>
                 </NavDropdown.Item>
-            ) : (
-                    <NavDropdown.Item as="li" key={'key_symbol_list_' + s} >
-                        <Link to={"/chart/" + s} >{s}</Link>
-                    </NavDropdown.Item>
-                )
+            )
         })
 
         return (

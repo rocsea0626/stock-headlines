@@ -1,6 +1,13 @@
 import axios from 'axios';
 import { API } from './constants'
-import {symbols} from '../data/mock/symbols'
+import { symbols } from '../data/mock/symbols'
+
+const getHeaders = () => {
+    return {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.REACT_APP_API_KEY
+    }
+}
 
 export function fetchFeeds(symbol, timestamp) {
 
@@ -13,9 +20,7 @@ export function fetchFeeds(symbol, timestamp) {
                 "symbol": symbol,
                 "timestamp": timestamp
             },
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: getHeaders()
         }
     )
 }
@@ -23,22 +28,37 @@ export function fetchFeeds(symbol, timestamp) {
 export function fetchSymbols() {
 
     if (process.env.REACT_APP_DATE_SOURCE === 'local') {
-        return new Promise((res, rej)=>{
-            setTimeout(() => res(symbols), 500);
+        return new Promise((res, rej) => {
+            const result = {
+                data: {
+                    symbols: symbols
+                }
+            }
+            setTimeout(() => res(result), 500);
         })
     }
 
     const relativePath = 'symbols'
 
-    return axios.get(API.aws.baseUrl + relativePath)
+    return axios.get(
+        API.aws.baseUrl + relativePath,
+        {
+            headers: getHeaders()
+        }
+    )
 }
 
 
 export function addSymbol(symbol) {
 
     if (process.env.REACT_APP_DATE_SOURCE === 'local') {
-        return new Promise((res, rej)=>{
-            setTimeout(() => res(symbols.push(symbol)), 500);
+        return new Promise((res, rej) => {
+            const result = {
+                data: {
+                    symbols: symbols.concat(symbol)
+                }
+            }
+            setTimeout(() => res(result), 500);
         })
     }
     const relativePath = 'symbols'
@@ -46,7 +66,38 @@ export function addSymbol(symbol) {
     return axios.post(
         API.aws.baseUrl + relativePath,
         {
-            "symbol": symbol
+            symbol: symbol
+        },
+        {
+            headers: getHeaders()
+        }
+    )
+}
+
+export function removeSymbol(symbol) {
+
+    if (process.env.REACT_APP_DATE_SOURCE === 'local') {
+
+        return new Promise((res, rej) => {
+            const result = {
+                data: {
+                    symbols: symbols.filter((s) => {
+                        return s !== symbol
+                    })
+                }
+            }
+            setTimeout(() => res(result), 500)
+        })
+    }
+    const relativePath = 'symbols'
+
+    return axios.delete(
+        API.aws.baseUrl + relativePath,
+        {
+            data: {
+                symbol: symbol,
+            },
+            headers: getHeaders()
         }
     )
 }

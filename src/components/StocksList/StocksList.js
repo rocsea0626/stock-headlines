@@ -1,16 +1,19 @@
 import * as React from "react";
-import { Table, Row, Col, Navbar, Form, FormControl, Button, Container } from 'react-bootstrap';
+import { Table, Nav, Badge, Navbar, Form, FormControl, Button, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import './StocksList.css';
 import { Link } from 'react-router-dom';
 import { formatPercentage, formatPrice } from '../../utils';
 import { connect } from "react-redux"
 import Spinner from 'react-bootstrap/Spinner'
-import { addSymbol } from '../../actions'
+import { addSymbol, removeSymbol } from '../../actions'
 
 class StocksList extends React.Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            showEdit: false
+        }
         this.inputAddSymbol = React.createRef()
     }
 
@@ -24,6 +27,12 @@ class StocksList extends React.Component {
         this.inputAddSymbol.current.value = ''
     }
 
+    onEditClicked = (checked) => {
+        this.setState({
+            showEdit: checked
+        })
+    }
+
     renderToolbar = () => {
         return (
             <Navbar bg="light" expand='sm'>
@@ -34,15 +43,40 @@ class StocksList extends React.Component {
                         className="mr-sm-2"
                         ref={this.inputAddSymbol}
                     />
-                    <Button variant='outline-info' onClick={(e) => { this.onAddClicked(e) }}>Send</Button>
+                    <Button variant='outline-info' onClick={(e) => { this.onAddClicked(e) }}>Add</Button>
                 </Form>
+                <h3><Badge variant="light">|</Badge></h3>
+
+                <ButtonGroup toggle>
+                    <ToggleButton
+                        type="checkbox"
+                        variant="outline-info"
+                        checked={this.state.showEdit}
+                        value="1"
+                        onChange={(e) => this.onEditClicked(e.currentTarget.checked)}
+                    >
+                        Edit
+                        </ToggleButton>
+                </ButtonGroup>
             </Navbar>
         )
     }
 
     renderStocks = () => {
-        const rows = Object.keys(this.props.quotes).map((key, idx) => {
-            const q = this.props.quotes[key]
+        return this.props.symbols.map((symbol, idx) => {
+
+            const q = this.props.quotes[symbol] ? 
+            this.props.quotes[symbol] : 
+            {
+                symbol: symbol,
+                shortName: 'N/A',
+                fullExchangeName: 'N/A',
+                currency: 'N/A',
+                regularMarketPrice: 0,
+                regularMarketChangePercent: 0,
+                regularMarketVolume: 0
+            }
+
             return (
                 <tr key={idx}>
                     <td>{idx + 1}</td>
@@ -67,16 +101,25 @@ class StocksList extends React.Component {
                     </td>
                     <td>{q.regularMarketVolume}</td>
 
+                    {
+                        this.state.showEdit ? (
+                            <td><Button
+                                onClick={() => { this.props.removeSymbol(q.symbol) }}
+                                variant='outline-danger'>X</Button>
+                            </td>
+                        ) : null
+                    }
+
                 </tr>
             )
         })
-        return rows
     }
 
     render() {
         if (this.props.loading) {
             return <Spinner animation="border" variant="primary" />
         }
+
         return (
             <React.Fragment>
                 {this.renderToolbar()}
@@ -111,7 +154,7 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    { addSymbol }
+    { addSymbol, removeSymbol }
 )(StocksList)
 
 
