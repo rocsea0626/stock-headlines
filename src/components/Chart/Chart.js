@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from "react-redux"
-import './ChartComponent.css';
+import './Chart.css';
 import { Container, Spinner, Navbar, Nav, NavDropdown, Button, Form } from 'react-bootstrap'
-import { RssFeeds, Error } from '../../layouts'
+import { RssFeeds, Error } from '../../components'
 import { selectSymbol, fetchChart } from '../../actions'
 import * as api from '../../api'
 import { Link } from 'react-router-dom'
-import Chart from './Chart'
+import Chart from './CandlestickChart'
 
 class ChartComponent extends React.Component {
 

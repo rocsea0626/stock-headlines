@@ -29,7 +29,7 @@ import { fitWidth } from "react-stockcharts/lib/helper";
 import { ClickCallback } from "react-stockcharts/lib/interactive";
 import { last } from "react-stockcharts/lib/utils";
 
-import './Chart.css'
+import './CandlestickChart.css'
 
 const macdAppearance = {
 	stroke: {
