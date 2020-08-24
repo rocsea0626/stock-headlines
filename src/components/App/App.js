@@ -22,7 +22,6 @@ function App(props) {
             <Header />
             <main role='main' className='App'>
                 <Switch>
-                    {/* <Route path="/" component={SiteLocation} /> */}
                     <Route exact path="/" component={StocksList} />
                     <Route path="/chart/:symbol" component={ChartComponent} />
                     <Route component={NotFound} />

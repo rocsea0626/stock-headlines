@@ -2,6 +2,13 @@ import axios from 'axios';
 import { API } from './constants'
 import { symbols } from '../data/mock/symbols'
 
+const getHeaders = () => {
+    return {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.REACT_APP_API_KEY
+    }
+}
+
 export function fetchFeeds(symbol, timestamp) {
 
     const relativePath = 'rssfeeds'
@@ -13,9 +20,7 @@ export function fetchFeeds(symbol, timestamp) {
                 "symbol": symbol,
                 "timestamp": timestamp
             },
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: getHeaders()
         }
     )
 }
@@ -35,7 +40,12 @@ export function fetchSymbols() {
 
     const relativePath = 'symbols'
 
-    return axios.get(API.aws.baseUrl + relativePath)
+    return axios.get(
+        API.aws.baseUrl + relativePath,
+        {
+            headers: getHeaders()
+        }
+    )
 }
 
 
@@ -56,7 +66,8 @@ export function addSymbol(symbol) {
     return axios.post(
         API.aws.baseUrl + relativePath,
         {
-            "symbol": symbol
+            symbol: symbol,
+            headers: getHeaders()
         }
     )
 }
@@ -82,8 +93,9 @@ export function removeSymbol(symbol) {
         API.aws.baseUrl + relativePath,
         {
             data: {
-                "symbol": symbol
-            }
+                symbol: symbol,
+            },
+            headers: getHeaders()
         }
     )
 }

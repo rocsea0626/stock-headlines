@@ -6,10 +6,10 @@ class Footer extends React.Component {
     render() {
         return (
             <Navbar fixed="bottom" bg='light'>
-                    <Container>
-                        <Navbar.Brand>GHP Finland, CopyRight@{new Date().getFullYear()}</Navbar.Brand>
-                    </Container>
-                </Navbar>
+                <Container>
+                    <Navbar.Brand>GHP Finland, CopyRight@{new Date().getFullYear()}</Navbar.Brand>
+                </Container>
+            </Navbar>
         )
     }
 }
