@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Table, Nav, Badge, Navbar, Form, FormControl, Button, ButtonGroup, ToggleButton } from 'react-bootstrap';
+import { Table, Badge, Navbar, Form, FormControl, Button, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import './StocksList.css';
 import { Link } from 'react-router-dom';
 import { formatPercentage, formatPrice } from '../../utils';
@@ -65,17 +65,17 @@ class StocksList extends React.Component {
     renderStocks = () => {
         return this.props.symbols.map((symbol, idx) => {
 
-            const q = this.props.quotes[symbol] ? 
-            this.props.quotes[symbol] : 
-            {
-                symbol: symbol,
-                shortName: 'N/A',
-                fullExchangeName: 'N/A',
-                currency: 'N/A',
-                regularMarketPrice: 0,
-                regularMarketChangePercent: 0,
-                regularMarketVolume: 0
-            }
+            const q = this.props.quotes[symbol] ?
+                this.props.quotes[symbol] :
+                {
+                    symbol: symbol,
+                    shortName: 'N/A',
+                    fullExchangeName: 'N/A',
+                    currency: 'N/A',
+                    regularMarketPrice: 0,
+                    regularMarketChangePercent: 0,
+                    regularMarketVolume: 0
+                }
 
             return (
                 <tr key={idx}>
