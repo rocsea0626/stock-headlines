@@ -31,28 +31,28 @@ const fetchSymbols = () => {
 }
 
 const fetchQuotes = (apiName, symbols) => {
-    if(apiName === NAME.Yahoo)
+    if (apiName === NAME.Yahoo)
         return Yahoo.fetchQuotes(symbols)
 
     return YahooFree.fetchQuotes(symbols)
 }
 
 const fetchChart = (apiName, symbol, interval, range) => {
-    if(apiName === NAME.Yahoo)
+    if (apiName === NAME.Yahoo)
         return Yahoo.fetchChart(symbol, interval, range)
 
     return YahooFree.fetchChart(symbol, interval, range)
 }
 
 const parseResponseChart = (apiName, res) => {
-    if(apiName === NAME.Yahoo)
+    if (apiName === NAME.Yahoo)
         return Yahoo.parseChartResponse(res)
 
     return YahooFree.parseChartResponse(res)
 }
 
 const parseResponseQuotes = (apiName, res) => {
-    if(apiName === NAME.Yahoo)
+    if (apiName === NAME.Yahoo)
         return Yahoo.parseChartQuotes(res)
 
     return YahooFree.parseChartQuotes(res)

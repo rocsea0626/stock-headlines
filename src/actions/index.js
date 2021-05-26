@@ -22,7 +22,7 @@ const fetchSymbols = async (dispatch) => {
 
 const fetchQuotes = async (dispatch, symbols) => {
     try {
-        const apiName = api.NAME.YahooFree
+        const apiName = api.NAME.Yahoo
         dispatch(createAction(actionTypes.FETCH_QUOTES_START))
         const res = await api.fetchQuotes(apiName, symbols)
         const payload = api.parseResponseQuotes(apiName, res)
@@ -44,7 +44,7 @@ export const fetchChart = (symbol, interval, range) => {
     console.log(`fetchChart(${symbol}, ${interval}, ${range})`)
     return async function (dispatch) {
         dispatch(createAction(actionTypes.FETCH_CHART_START))
-        const apiName = api.NAME.YahooFree
+        const apiName = api.NAME.Yahoo
         try {
             const res = await api.fetchChart(apiName, symbol, interval, range)
             console.log(res)
@@ -68,7 +68,7 @@ export const selectSymbol = (symbol, timestamp) => {
         try {
             const res = await api.fetchFeeds(symbol, timestamp)
             console.log(res)
-            if(res.data.text.Count){
+            if (res.data.text.Count) {
                 dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, res.data.text.Items[0].items))
             } else {
                 dispatch(createAction(actionTypes.FETCH_RSSFEEDS_COMPLETED, []))

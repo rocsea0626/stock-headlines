@@ -104,7 +104,7 @@ class ChartComponent extends React.Component {
 
     renderAreaChart = () => {
         const { symbol } = this.props.match.params
-
+        console.log(this.props.data)
         return (
             <Container className="chartContainer">
                 {this.renderIntervalsAndRanges()}
