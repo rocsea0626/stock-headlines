@@ -10,19 +10,31 @@ const NAME = {
 }
 
 
-const getInterval = () => {
+const getInterval = (apiName) => {
+    if (apiName === NAME.Yahoo)
+        return API.yahoo.resources.chart.interval
+
     return API.yahooFree.resources.chart.interval
 }
 
-const getAllowedIntervals = () => {
+const getAllowedIntervals = (apiName) => {
+    if (apiName === NAME.Yahoo)
+        return API.yahoo.resources.chart.allowed.intervals
+
     return API.yahooFree.resources.chart.allowed.intervals
 }
 
-const getRange = () => {
+const getRange = (apiName) => {
+    if (apiName === NAME.Yahoo)
+        return API.yahoo.resources.chart.range
+
     return API.yahooFree.resources.chart.range
 }
 
-const getAllowedRanges = () => {
+const getAllowedRanges = (apiName) => {
+    if (apiName === NAME.Yahoo)
+        return API.yahoo.resources.chart.allowed.range
+
     return API.yahooFree.resources.chart.allowed.range
 }
 

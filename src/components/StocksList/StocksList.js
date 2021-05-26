@@ -25,6 +25,9 @@ class StocksList extends React.Component {
         // console.log(this.inputAddSymbol.current.value)
         this.props.addSymbol(this.inputAddSymbol.current.value)
         this.inputAddSymbol.current.value = ''
+        this.setState({
+            showEdit: false
+        })
     }
 
     onEditClicked = (checked) => {
