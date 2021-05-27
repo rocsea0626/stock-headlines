@@ -3,18 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.5.2",
-    "@material-ui/icons": "^4.5.1",
     "axios": "^0.19.0",
-    "chart.js": "^2.9.2",
+    "bootstrap": "^4.4.1",
+    "chart.js": "^2.9.3",
+    "d3-dsv": "^1.0.8",
+    "d3-format": "^1.2.1",
+    "d3-scale": "^1.0.7",
+    "d3-time-format": "^2.1.1",
+    "prop-types": "^15.6.0",
     "react": "^16.11.0",
-    "react-chartjs-2": "^2.8.0",
+    "react-bootstrap": "^1.0.0",
+    "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
-    "rss-parser": "^3.7.3"
+    "react-stockcharts": "^0.7.8",
+    "rss-parser": "^3.7.3",
+    "shortid": "^2.2.8"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-with-mock": "REACT_APP_DATE_SOURCE=local react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -33,5 +42,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   }
 }

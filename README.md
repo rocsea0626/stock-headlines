@@ -1,5 +1,25 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Stocks & Headlines
+This web application allows you to track daily stock prices along with news.
+
+![plot](./img/list_stocks.png)
+Once a stock with correct symbol is added into list, its related news will be fetched & stored in backed database on daily basis.
+
+
+![plot](./img/candle_stick_chart.png)
+Click on the candle stick chart on a specific day, daily news for that stock will be fetched and displayed at the bottom of page.
+
+![plot](./img/add_edit_stocks_list.png)
+You can add & edit stocks in the list.
+
+![plot](./img/change_interval_chart.png)
+You can interact with chart by selecting differnt time ranges and intervals.
+
+
+**This project is made for my personal use. Please use it with caution.**
+
+
 ## Available Scripts
 
 In the project directory, you can run:
